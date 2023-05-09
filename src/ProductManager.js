@@ -7,7 +7,6 @@ const uuid4 = require("uuid4");
 class ProductManager {
   constructor(path) {
     this.products = [];
-    this.id = 1;
     this.path = path;
   }
 
@@ -62,7 +61,6 @@ class ProductManager {
             JSON.stringify(this.products),
             "utf-8"
           );
-          this.id++;
           return "El archivo se guardo correctamente";
         }
       } catch (err) {
@@ -107,7 +105,7 @@ class ProductManager {
         return;
       }
     } catch (err) {
-      console.error(`ERROR ${err}`);
+      return `ERROR ${err}`;
     }
   }
 
