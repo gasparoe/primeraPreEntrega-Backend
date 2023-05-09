@@ -1,5 +1,7 @@
 const fs = require("fs");
 
+const uuid4 = require("uuid4");
+
 //Creo la clase ProductManager
 
 class ProductManager {
@@ -9,25 +11,38 @@ class ProductManager {
     this.path = path;
   }
 
-  async addProduct(title, description, price, thumbnail, code, stock) {
+  async addProduct(
+    title,
+    description,
+    code,
+    price,
+    status,
+    stock,
+    category,
+    thumbnail
+  ) {
     if (
       title != undefined &&
       description != undefined &&
-      price != undefined &&
-      thumbnail != undefined &&
       code != undefined &&
-      stock != undefined
+      price != undefined &&
+      status != undefined &&
+      stock != undefined &&
+      category != undefined &&
+      thumbnail != undefined
     ) {
       //Incremento el id cada vez que se crea un producto nuevo
 
       let product = {
         title: title,
         description: description,
-        price: price,
-        thumbnail: thumbnail,
         code: code,
+        price: price,
+        status: status,
         stock: stock,
-        id: this.id,
+        category: category,
+        thumbnail: thumbnail,
+        id: uuid4(),
       };
 
       try {
@@ -37,10 +52,9 @@ class ProductManager {
           products = JSON.parse(data);
         }
         this.products = products;
-        console.log("termine de leer");
 
         if (this.products.find((producto) => producto.code === product.code)) {
-          console.log("Ya existe un producto con ese codigo");
+          return "Ya existe un producto con ese codigo";
         } else {
           this.products.push(product);
           await fs.promises.writeFile(
@@ -49,15 +63,13 @@ class ProductManager {
             "utf-8"
           );
           this.id++;
-          console.log("El archivo se guardo correctamente");
+          return "El archivo se guardo correctamente";
         }
       } catch (err) {
-        console.error(`Error ${err}`);
+        return `Error ${err}`;
       }
     } else {
-      console.log(
-        "No se puede crear el producto. Faltan definir caracteristicas"
-      );
+      return "No se puede crear el producto. Faltan definir caracteristicas";
     }
   }
 
@@ -72,6 +84,8 @@ class ProductManager {
       return this.products;
     } catch (err) {
       console.error(`ERROR ${err}`);
+      this.products = [];
+      return this.products;
     }
   }
 
@@ -117,20 +131,28 @@ class ProductManager {
             producto.description = nuevoProducto.description;
           }
 
-          if (nuevoProducto.price != undefined) {
-            producto.price = nuevoProducto.price;
-          }
-
-          if (nuevoProducto.thumbnail != undefined) {
-            producto.thumbnail = nuevoProducto.thumbnail;
-          }
-
           if (nuevoProducto.code != undefined) {
             producto.code = nuevoProducto.code;
           }
 
+          if (nuevoProducto.price != undefined) {
+            producto.price = nuevoProducto.price;
+          }
+
+          if (nuevoProducto.status != undefined) {
+            producto.status = nuevoProducto.status;
+          }
+
           if (nuevoProducto.stock != undefined) {
             producto.stock = nuevoProducto.stock;
+          }
+
+          if (nuevoProducto.category != undefined) {
+            producto.category = nuevoProducto.category;
+          }
+
+          if (nuevoProducto.thumbnail != undefined) {
+            producto.thumbnail = nuevoProducto.thumbnail;
           }
 
           //ANTES DE ACTUALIZAR EL PRODUCTO, VERIFICO QUE EL NUEVO CODIGO DEL PRODUCTO ACTUALIZADO NO EXISTA
@@ -140,7 +162,7 @@ class ProductManager {
                 product.code === producto.code && product.id !== producto.id
             )
           ) {
-            console.log("Ya existe un producto con ese codigo");
+            return "Ya existe un producto con ese codigo";
           } else {
             this.products[index] = producto;
             isUpdated = true;
@@ -153,12 +175,12 @@ class ProductManager {
           JSON.stringify(this.products),
           "utf-8"
         );
-        console.log("Se ha actualizado el producto correctamente");
+        return "Se ha actualizado el producto correctamente";
       } else {
-        console.log("No se ha podido actualizar el producto");
+        return "No se ha podido actualizar el producto";
       }
     } catch (err) {
-      console.error(`Error ${err}`);
+      return `Error ${err}`;
     }
   }
 
@@ -185,13 +207,13 @@ class ProductManager {
           JSON.stringify(this.products),
           "utf-8"
         );
-        console.log("Se elimino el producto correctamente");
+        return "Se elimino el producto correctamente";
       } else {
-        console.log("No se ha encontrado el producto a eliminar");
+        return "No se ha encontrado el producto a eliminar";
       }
     } catch {
-      console.error(`Error ${err}`);
+      return `Error ${err}`;
     }
   }
 }
-module.exports = ProductManager
+module.exports = ProductManager;
