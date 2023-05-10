@@ -19,6 +19,10 @@ router.post("/", (req, res) => {
     });
 });
 
+
+
+
+
 //GET CARRITO POR ID
 router.get("/:cid", (req, res) => {
   let cid = req.params.cid;
@@ -32,6 +36,10 @@ router.get("/:cid", (req, res) => {
   });
 });
 
+
+
+
+
 //INSERTO PRODUCTO POR ID EN CARRITO POR ID
 router.post("/:cid/product/:pid", (req, res) => {
   let cid = req.params.cid;
@@ -39,38 +47,54 @@ router.post("/:cid/product/:pid", (req, res) => {
   let carritoEncontrado = undefined;
   let productoEncontrado = undefined;
 
+
+  //Primero chequeo si existe el carrito con ese ID y tambien si existe el producto con ese ID
+
+  //Utilizo la funcion GetCardbyId ya creada anteriormente
   const instanciaCartManager = new cartManager("./carrito.json");
   let p1 = instanciaCartManager.getCartById(cid).then((carrito) => {
     if (carrito !== undefined) {
       carritoEncontrado = carrito;
-    } else {
-      res.send(`No se ha encontrado el carrito con ID: ${cid}`);
     }
   });
 
-
-const instanciaProductManager = new productManager("./products.json");
+//Utilizo la funcion GetProductById ya creada en la clase ProductManager
+  const instanciaProductManager = new productManager("./products.json");
   let p2 = instanciaProductManager.getProductById(pid).then((product) => {
     if (product !== undefined) {
-      productoEncontrado = product
-    } else {
-      res.send(`No se ha encontrado el producto con ID: ${pid}`);
-    }
+      productoEncontrado = product;
+    } 
   });
 
-  Promise.all([p1,p2]).then(()=>{
-    console.log('se terminaron las dos promeses')
-    //res.send('se terminaron las dos promeses')
-
-    if(productoEncontrado != undefined && carritoEncontrado != undefined){
-        console.log('Se encontraron ambos')
-    }else{
-        console.log('Alguno no se encontro')
-    }
-  }).catch((err)=>{console.log(err)})
-
-
-
+  //Espero que esas dos promesas terminen
+  Promise.all([p1, p2])
+    .then(() => {
+      //Si se encontro el carrito y el producto entonces ejecuto la actualizacion del carrito introduciendo ese producto con la funcion UpdateCartbyId
+      if (productoEncontrado != undefined && carritoEncontrado != undefined) {
+        instanciaCartManager.updateCartbyId(cid,pid).then((nuevoCarrito)=>{
+          res.send(`Se actualizo el carrito correctamente`);
+        })
+        
+      } else if (
+        productoEncontrado == undefined &&
+        carritoEncontrado != undefined
+      ) {
+        res.send("No se encontro el producto pero si el carrito");
+      } else if (
+        carritoEncontrado == undefined &&
+        productoEncontrado != undefined
+      ) {
+        res.send("No se encontro el carrito pero si el producto");
+      } else if (
+        carritoEncontrado == undefined &&
+        productoEncontrado == undefined
+      ) {
+        res.send("No se encontro ni el carrito ni el producto");
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 module.exports = router;
