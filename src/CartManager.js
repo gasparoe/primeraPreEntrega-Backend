@@ -10,6 +10,8 @@ class CartManager {
     this.path = path;
   }
 
+
+  //ADD CART
   async addCart() {
     let cart = {
       id: uuid4(),
@@ -35,6 +37,8 @@ class CartManager {
     }
   }
 
+
+  //GET CART BY ID
   async getCartById(id) {
     try {
       const data = await fs.promises.readFile(this.path, "utf-8");
@@ -46,7 +50,6 @@ class CartManager {
 
       let cart = this.carts.find((cart) => cart.id === id);
       if (cart) {
-        console.log(`Se ha encontrado el carrito con ID ${id}.`);
         return cart;
       } else {
         console.error("Not found");
@@ -57,6 +60,7 @@ class CartManager {
     }
   }
 
+  //UPDATE CART BY ID
   async updateCartbyId(cid,pid){
 
     let isUpdated = false
@@ -73,49 +77,38 @@ class CartManager {
       
       this.carts.forEach((carrito,index)=>{
 
-        
-
           if(carrito.id === cid){
             let productos = carrito.carts
 
             productos.forEach((producto,index) =>{
+              //Si el producto ya se encuentra en el carrito, agrego 1 en la cantidad
               if (producto.id === pid){
-                console.log('se encontro ya un producto de esos')
-                producto.quantity = producto.quantity + 1
 
+                producto.quantity = producto.quantity + 1
                 productos[index] = producto
                 productFound = true
+
               }
 
             })
 
-
+            //Si el producto no se crea en el carrito creo el objeto
             if(!productFound)
             {
-
-              console.log('no encontro el producto')
-                //Creo el producto nuevo
+                //Creo el producto nuevo con cantidad 1
                 let nuevoProducto = {
                   id: pid,
                   quantity: 1
                 }
 
-    
                 productos.push(nuevoProducto)
 
-              }
-
-           
+              }   
 
             carrito.carts = productos
-            console.log(carrito.carts)
-
             this.carts[index] = {id:cid, carts: carrito.carts}
-
             isUpdated = true
           }
-
-          
 
         })
 
@@ -126,16 +119,10 @@ class CartManager {
             "utf-8"
           ).then(()=>{return this.carts}).catch((err)=>{return `ERROR ${err}`});
         }
-         
-      
     } catch (err) {
       return `ERROR ${err}`;
     }
-
-
-
   }
-
 
 }
 module.exports = CartManager;

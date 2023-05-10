@@ -30,7 +30,6 @@ class ProductManager {
       category != undefined &&
       thumbnail != undefined
     ) {
-      //Incremento el id cada vez que se crea un producto nuevo
 
       let product = {
         title: title,
@@ -41,7 +40,7 @@ class ProductManager {
         stock: stock,
         category: category,
         thumbnail: thumbnail,
-        id: uuid4(),
+        id: uuid4(), //Asigno un uuid como ID de producto
       };
 
       try {
@@ -71,6 +70,8 @@ class ProductManager {
     }
   }
 
+
+  //GET PRODUCTS
   async getProducts() {
     try {
       const data = await fs.promises.readFile(this.path, "utf-8");
@@ -87,6 +88,8 @@ class ProductManager {
     }
   }
 
+
+  //GET PRODUCTS BY ID
   async getProductById(id) {
     try {
       const data = await fs.promises.readFile(this.path, "utf-8");
@@ -109,6 +112,7 @@ class ProductManager {
     }
   }
 
+  //UPDATE PRODUCT
   async updateProduct(id, nuevoProducto) {
     try {
       let isUpdated = false;
@@ -182,6 +186,7 @@ class ProductManager {
     }
   }
 
+  //DELETE PRODUCT
   async deleteProduct(id) {
     try {
       let isDeleted = false;

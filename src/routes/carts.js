@@ -19,10 +19,6 @@ router.post("/", (req, res) => {
     });
 });
 
-
-
-
-
 //GET CARRITO POR ID
 router.get("/:cid", (req, res) => {
   let cid = req.params.cid;
@@ -36,17 +32,12 @@ router.get("/:cid", (req, res) => {
   });
 });
 
-
-
-
-
-//INSERTO PRODUCTO POR ID EN CARRITO POR ID
+//INSERTO UN PRODUCTO POR ID EN CARRITO
 router.post("/:cid/product/:pid", (req, res) => {
   let cid = req.params.cid;
   let pid = req.params.pid;
   let carritoEncontrado = undefined;
   let productoEncontrado = undefined;
-
 
   //Primero chequeo si existe el carrito con ese ID y tambien si existe el producto con ese ID
 
@@ -58,12 +49,12 @@ router.post("/:cid/product/:pid", (req, res) => {
     }
   });
 
-//Utilizo la funcion GetProductById ya creada en la clase ProductManager
+  //Utilizo la funcion GetProductById ya creada en la clase ProductManager
   const instanciaProductManager = new productManager("./products.json");
   let p2 = instanciaProductManager.getProductById(pid).then((product) => {
     if (product !== undefined) {
       productoEncontrado = product;
-    } 
+    }
   });
 
   //Espero que esas dos promesas terminen
@@ -71,10 +62,10 @@ router.post("/:cid/product/:pid", (req, res) => {
     .then(() => {
       //Si se encontro el carrito y el producto entonces ejecuto la actualizacion del carrito introduciendo ese producto con la funcion UpdateCartbyId
       if (productoEncontrado != undefined && carritoEncontrado != undefined) {
-        instanciaCartManager.updateCartbyId(cid,pid).then((nuevoCarrito)=>{
-          res.send(`Se actualizo el carrito correctamente`);
-        })
-        
+        instanciaCartManager.updateCartbyId(cid, pid).then((nuevoCarrito) => {
+          res.send("Se actualizo el carrito correctamente");
+        });
+        //Devuelvo como respuesta en caso de no encontrar alguno o los dos ids.
       } else if (
         productoEncontrado == undefined &&
         carritoEncontrado != undefined
