@@ -17,7 +17,7 @@ router.get("/", (req, res) => {
     } else {
       res.send(products);
     }
-  }).catch(res.status(500).send({"error":"server error"}));
+  }).catch((err) => res.status(500).send({"error":"server error"}));
 });
 
 //GET PRODUCTOS POR ID
@@ -30,10 +30,7 @@ router.get("/:pid", (req, res) => {
     } else {
       res.send(`No se ha encontrado el producto con ID: ${pid}`);
     }
-  }).catch(res.status(500).send({"error":"server error"}));
-
-  
-
+  }).catch((err) => res.status(500).send({"error":"server error"}));
 });
 
 //POST AGREGAR PRODUCTO
