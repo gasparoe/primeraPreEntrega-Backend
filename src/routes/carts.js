@@ -15,7 +15,7 @@ router.post("/", (req, res) => {
       res.send(estado);
     })
     .catch((err) => {
-      res.send(`${err}`);
+      res.status(500).send(`${err}`);
     });
 });
 
@@ -84,7 +84,7 @@ router.post("/:cid/product/:pid", (req, res) => {
       }
     })
     .catch((err) => {
-      console.log(err);
+      res.status(500).send(`${err}`)
     });
 });
 

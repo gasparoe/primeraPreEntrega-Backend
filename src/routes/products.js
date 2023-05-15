@@ -9,6 +9,7 @@ const router = new Router();
 
 //GET PRODUCTOS
 router.get("/", (req, res) => {
+  try{
   let limit = req.query.limit;
   const instanciaProductManager = new productManager("./products.json");
   instanciaProductManager.getProducts().then((products) => {
@@ -18,10 +19,14 @@ router.get("/", (req, res) => {
       res.send(products);
     }
   });
+}catch{
+  res.status(500).send({"error":"server error"})
+}
 });
 
 //GET PRODUCTOS POR ID
 router.get("/:pid", (req, res) => {
+  try{
   let pid = req.params.pid;
   const instanciaProductManager = new productManager("./products.json");
   instanciaProductManager.getProductById(pid).then((product) => {
@@ -31,6 +36,9 @@ router.get("/:pid", (req, res) => {
       res.send(`No se ha encontrado el producto con ID: ${pid}`);
     }
   });
+}catch{
+  res.status(500).send({"error":"server error"})
+}
 });
 
 //POST AGREGAR PRODUCTO
@@ -49,7 +57,7 @@ router.post("/", (req, res) => {
       data.thumbnail
     )
     .then((estado) => res.send(`${estado}`))
-    .catch((err) => res.send(`${err}`));
+    .catch((err) => res.status(500).send(`${err}`));
 });
 
 //PUT ACTUALIZAR PRODUCTO POR ID
@@ -60,7 +68,7 @@ router.put("/:pid", (req, res) => {
     instanciaProductManager
       .updateProduct(pid,data)
       .then((estado) => res.send(`${estado}`))
-      .catch((err) => res.send(`${err}`));
+      .catch((err) => res.status(500).send(`${err}`));
   });
 
   //DELETE PRODUCTO POR ID
@@ -70,7 +78,7 @@ router.delete("/:pid", (req, res) => {
     instanciaProductManager
       .deleteProduct(pid)
       .then((estado) => res.send(`${estado}`))
-      .catch((err) => res.send(`${err}`));
+      .catch((err) => res.status(500).send(`${err}`));
   });
 
 module.exports = router;

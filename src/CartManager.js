@@ -117,7 +117,8 @@ class CartManager {
             this.path,
             JSON.stringify(this.carts),
             "utf-8"
-          ).then(()=>{return this.carts}).catch((err)=>{return `ERROR ${err}`});
+          )
+          return this.carts
         }
     } catch (err) {
       return `ERROR ${err}`;

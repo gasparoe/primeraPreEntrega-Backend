@@ -15,20 +15,18 @@ class ProductManager {
     description,
     code,
     price,
-    status,
+    status = true,
     stock,
     category,
-    thumbnail
+    thumbnail = []
   ) {
     if (
       title != undefined &&
       description != undefined &&
       code != undefined &&
       price != undefined &&
-      status != undefined &&
       stock != undefined &&
-      category != undefined &&
-      thumbnail != undefined
+      category != undefined
     ) {
 
       let product = {
