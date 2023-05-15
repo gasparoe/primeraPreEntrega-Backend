@@ -29,7 +29,7 @@ router.get("/:cid", (req, res) => {
     } else {
       res.send(`No se ha encontrado el carrito con ID: ${cid}`);
     }
-  });
+  }).catch(res.status(500).send({"error":"server error"}));
 });
 
 //INSERTO UN PRODUCTO POR ID EN CARRITO

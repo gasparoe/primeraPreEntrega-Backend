@@ -9,7 +9,6 @@ const router = new Router();
 
 //GET PRODUCTOS
 router.get("/", (req, res) => {
-  try{
   let limit = req.query.limit;
   const instanciaProductManager = new productManager("./products.json");
   instanciaProductManager.getProducts().then((products) => {
@@ -18,15 +17,11 @@ router.get("/", (req, res) => {
     } else {
       res.send(products);
     }
-  });
-}catch{
-  res.status(500).send({"error":"server error"})
-}
+  }).catch(res.status(500).send({"error":"server error"}));
 });
 
 //GET PRODUCTOS POR ID
 router.get("/:pid", (req, res) => {
-  try{
   let pid = req.params.pid;
   const instanciaProductManager = new productManager("./products.json");
   instanciaProductManager.getProductById(pid).then((product) => {
@@ -35,10 +30,10 @@ router.get("/:pid", (req, res) => {
     } else {
       res.send(`No se ha encontrado el producto con ID: ${pid}`);
     }
-  });
-}catch{
-  res.status(500).send({"error":"server error"})
-}
+  }).catch(res.status(500).send({"error":"server error"}));
+
+  
+
 });
 
 //POST AGREGAR PRODUCTO
