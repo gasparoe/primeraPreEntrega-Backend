@@ -59,7 +59,15 @@ router.put("/:pid", (req, res) => {
     const instanciaProductManager = new productManager("./products.json");
     instanciaProductManager
       .updateProduct(pid,data)
-      .then((estado) => res.send(`${estado}`))
+      .then((estado) => {
+        if(estado == "Se ha actualizado el producto correctamente"){
+          res.send(`${estado}`)
+        } else if( estado == "No se ha podido actualizar el producto"){
+          res.status(500).send(`Error: ${estado}`)
+        } else if ( estado == "Ya existe un producto con ese codigo"){
+          res.status(500).send(`Error: ${estado}`)
+        }
+      })
       .catch((err) => res.status(500).send(`${err}`));
   });
 
@@ -69,7 +77,13 @@ router.delete("/:pid", (req, res) => {
     const instanciaProductManager = new productManager("./products.json");
     instanciaProductManager
       .deleteProduct(pid)
-      .then((estado) => res.send(`${estado}`))
+      .then((estado) => {
+        if (estado == "Se elimino el producto correctamente"){
+          res.send(`${estado}`)
+        }else if ( estado == "No se ha encontrado el producto a eliminar"){
+          res.status(500).send(`Error: ${estado}`)
+        }
+      })
       .catch((err) => res.status(500).send(`${err}`));
   });
 

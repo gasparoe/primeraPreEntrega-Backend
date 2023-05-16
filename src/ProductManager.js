@@ -162,7 +162,8 @@ class ProductManager {
                 product.code === producto.code && product.id !== producto.id
             )
           ) {
-            return "Ya existe un producto con ese codigo";
+            return "Ya existe un producto con ese codigo"
+            //return "Ya existe un producto con ese codigo";
           } else {
             this.products[index] = producto;
             isUpdated = true;
@@ -177,10 +178,11 @@ class ProductManager {
         );
         return "Se ha actualizado el producto correctamente";
       } else {
-        return "No se ha podido actualizar el producto";
+        return "No se ha podido actualizar el producto"
+        //return "No se ha podido actualizar el producto";
       }
     } catch (err) {
-      return `Error ${err}`;
+      return `${err}`;
     }
   }
 
@@ -210,7 +212,8 @@ class ProductManager {
         );
         return "Se elimino el producto correctamente";
       } else {
-        return "No se ha encontrado el producto a eliminar";
+        return "No se ha encontrado el producto a eliminar"
+        //return "No se ha encontrado el producto a eliminar";
       }
     } catch {
       return `Error ${err}`;
